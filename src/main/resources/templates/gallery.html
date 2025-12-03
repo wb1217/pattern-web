@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>图库 - 纹理展示</title>
+    <link rel="stylesheet" th:href="@{/css/style.css?v=light}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div class="gallery-layout">
+        <!-- Sidebar Filters -->
+        <aside class="sidebar">
+            <!-- Sidebar Header -->
+            <div class="sidebar-header">
+                <h2 class="gallery-title" style="font-size: 1.5rem;">筛选</h2>
+            </div>
+
+            <!-- Sidebar Filters (Scrollable) -->
+            <div class="sidebar-filters">
+                <!-- Form Filter -->
+                <div class="filter-section">
+                    <h3 class="filter-title">形式结构</h3>
+                    <div class="filter-options" id="form-filters">
+                        <label class="filter-option"><input type="radio" name="form" value="" checked
+                                class="filter-checkbox"> 全部</label>
+                        <label class="filter-option"><input type="radio" name="form" value="二方连续"
+                                class="filter-checkbox">
+                            二方连续</label>
+                        <label class="filter-option"><input type="radio" name="form" value="四方连续"
+                                class="filter-checkbox">
+                            四方连续</label>
+                        <label class="filter-option"><input type="radio" name="form" value="单体构成"
+                                class="filter-checkbox">
+                            单体构成</label>
+                        <label class="filter-option"><input type="radio" name="form" value="轴对称"
+                                class="filter-checkbox">
+                            轴对称</label>
+                        <label class="filter-option"><input type="radio" name="form" value="中心式"
+                                class="filter-checkbox">
+                            中心式</label>
+                        <label class="filter-option"><input type="radio" name="form" value="散点式"
+                                class="filter-checkbox">
+                            散点式</label>
+                        <label class="filter-option"><input type="radio" name="form" value="平面化"
+                                class="filter-checkbox">
+                            平面化</label>
+                        <label class="filter-option"><input type="radio" name="form" value="旋转对称"
+                                class="filter-checkbox">
+                            旋转对称</label>
+                    </div>
+                </div>
+
+                <!-- Style Filter -->
+                <div class="filter-section">
+                    <h3 class="filter-title">风格特征</h3>
+                    <div class="filter-options" id="style-filters">
+                        <label class="filter-option"><input type="radio" name="style" value="" checked
+                                class="filter-checkbox"> 全部</label>
+                        <label class="filter-option"><input type="radio" name="style" value="传统风"
+                                class="filter-checkbox">
+                            传统风</label>
+                        <label class="filter-option"><input type="radio" name="style" value="宫廷风"
+                                class="filter-checkbox">
+                            宫廷风</label>
+                        <label class="filter-option"><input type="radio" name="style" value="民族风"
+                                class="filter-checkbox">
+                            民族风</label>
+                        <label class="filter-option"><input type="radio" name="style" value="文人风"
+                                class="filter-checkbox">
+                            文人风</label>
+                        <label class="filter-option"><input type="radio" name="style" value="现代主义"
+                                class="filter-checkbox">
+                            现代主义</label>
+                        <label class="filter-option"><input type="radio" name="style" value="装饰主义"
+                                class="filter-checkbox">
+                            装饰主义</label>
+                        <label class="filter-option"><input type="radio" name="style" value="极简"
+                                class="filter-checkbox">
+                            极简</label>
+                        <label class="filter-option"><input type="radio" name="style" value="新中式"
+                                class="filter-checkbox">
+                            新中式</label>
+                        <label class="filter-option"><input type="radio" name="style" value="复古"
+                                class="filter-checkbox">
+                            复古</label>
+                        <label class="filter-option"><input type="radio" name="style" value="未来主义"
+                                class="filter-checkbox">
+                            未来主义</label>
+                    </div>
+                </div>
+
+                <!-- Color Filter -->
+                <div class="filter-section">
+                    <h3 class="filter-title">色彩</h3>
+                    <div class="filter-options" id="color-filters">
+                        <label class="filter-option"><input type="radio" name="color" value="" checked
+                                class="filter-checkbox"> 全部</label>
+                        <label class="filter-option"><input type="radio" name="color" value="暖色"
+                                class="filter-checkbox">
+                            暖色</label>
+                        <label class="filter-option"><input type="radio" name="color" value="冷色"
+                                class="filter-checkbox">
+                            冷色</label>
+                        <label class="filter-option"><input type="radio" name="color" value="单色"
+                                class="filter-checkbox"> 单色</label>
+                    </div>
+                </div>
+
+                <!-- Theme Filter -->
+                <div class="filter-section">
+                    <h3 class="filter-title">主题元素</h3>
+                    <div class="filter-options" id="theme-filters">
+                        <label class="filter-option"><input type="radio" name="theme" value="" checked
+                                class="filter-checkbox"> 全部</label>
+                        <label class="filter-option"><input type="radio" name="theme" value="花卉"
+                                class="filter-checkbox">
+                            花卉</label>
+                        <label class="filter-option"><input type="radio" name="theme" value="动物"
+                                class="filter-checkbox">
+                            动物</label>
+                        <label class="filter-option"><input type="radio" name="theme" value="人物"
+                                class="filter-checkbox">
+                            人物</label>
+                        <label class="filter-option"><input type="radio" name="theme" value="器物"
+                                class="filter-checkbox">
+                            器物</label>
+                        <label class="filter-option"><input type="radio" name="theme" value="几何图形"
+                                class="filter-checkbox">
+                            几何图形</label>
+                        <label class="filter-option"><input type="radio" name="theme" value="文字符号"
+                                class="filter-checkbox">
+                            文字符号</label>
+                        <label class="filter-option"><input type="radio" name="theme" value="云水山石"
+                                class="filter-checkbox">
+                            云水山石</label>
+                        <label class="filter-option"><input type="radio" name="theme" value="传统纹样"
+                                class="filter-checkbox">
+                            传统纹样</label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sidebar Footer (Fixed at bottom) -->
+            <div class="sidebar-footer">
+                <div style="display: flex; flex-direction: column; gap: 0.8rem;">
+                    <!-- 只有管理员(status=1)才能看到管理员后台链接 -->
+                    <a th:if="${session.user != null and session.user.status == 1}" th:href="@{/admin}"
+                        style="color: #667eea; text-decoration: none; font-size: 0.9rem; font-weight: 600;">
+                        🔧 管理员后台
+                    </a>
+                    <a th:href="@{/logout}" style="color: #ef4444; text-decoration: none; font-size: 0.9rem;">退出登录</a>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="gallery-header">
+                <h1 class="gallery-title">纹理库</h1>
+            </div>
+
+            <div class="gallery-grid" id="gallery-grid">
+                <!-- Images will be loaded here via JS -->
+            </div>
+        </main>
+    </div>
+
+    <script th:src="@{/js/gallery.js}"></script>
+</body>
+
+</html>
