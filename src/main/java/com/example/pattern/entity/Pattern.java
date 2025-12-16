@@ -12,7 +12,8 @@ public class Pattern {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name; // 纹样名称
-    private String category; // 纹样分类
+    // Category removed
+
     private String description; // 纹样描述
     private String imageUrl; // 补充：纹样图片路径
 
@@ -22,7 +23,16 @@ public class Pattern {
     private String color; // 色彩
     private String theme; // 主题元素
 
-    private Integer sort; // 补充：排序权重
+    // Basic Information
+    private String imageCode; // 图片编号
+    private String resolution; // 图片尺寸/分辨率
+    private String imageFormat; // 图片格式
+    private String copyright; // 版权状态
+    private String author; // 作者
+    private String originDate; // 创作时间
+    private String recorder; // 录入者
+
+    // Sort removed
     private LocalDateTime createTime; // 补充：创建时间
     private LocalDateTime updateTime; // 补充：更新时间
 }

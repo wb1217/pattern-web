@@ -14,6 +14,7 @@ public class User {
     private String username;
     private String password;
     private String nickname;
+    private String avatar; // 用户头像路径
     private Integer status; // 1=管理员, 2=普通用户, 0=禁用
     private LocalDateTime createTime;
     private LocalDateTime updateTime;

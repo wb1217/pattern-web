@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>管理员后台 - 纹理管理</title>
+    <title>管理员后台 - 耘裳织象（Yunshang Digital Visual Archive）</title>
     <style>
         * {
             margin: 0;
@@ -365,7 +365,11 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1>🎨 纹理管理后台</h1>
+            <div>
+                <h1>🎨 耘裳织象后台管理</h1>
+                <p style="color: #64748b; font-size: 0.9rem; margin-top: 5px;">Yunshang Digital Visual Archive - Admin
+                    Panel</p>
+            </div>
             <div class="header-actions">
                 <a href="/gallery" class="btn btn-secondary">查看画廊</a>
                 <a href="/logout" class="btn btn-danger">退出登录</a>
@@ -385,66 +389,128 @@
                             <input type="text" id="name" name="name" required>
                         </div>
                         <div class="form-group">
-                            <label for="category">分类</label>
-                            <input type="text" id="category" name="category">
+                            <label for="imageCode">图片编号</label>
+                            <input type="text" id="imageCode" name="imageCode">
                         </div>
+
                         <div class="form-group">
                             <label for="form">形式结构 *</label>
                             <select id="form" name="form" required>
-                                <option value="">请选择</option>
+                                <option value="" disabled selected hidden>请选择</option>
                                 <option value="二方连续">二方连续</option>
                                 <option value="四方连续">四方连续</option>
                                 <option value="单体构成">单体构成</option>
-                                <option value="轴对称">轴对称</option>
-                                <option value="中心式">中心式</option>
-                                <option value="散点式">散点式</option>
-                                <option value="平面化">平面化</option>
+                                <option value="镜像对称">镜像对称</option>
                                 <option value="旋转对称">旋转对称</option>
                             </select>
                         </div>
                         <div class="form-group">
                             <label for="style">风格特征 *</label>
                             <select id="style" name="style" required>
-                                <option value="">请选择</option>
+                                <option value="" disabled selected hidden>请选择</option>
                                 <option value="传统风">传统风</option>
                                 <option value="宫廷风">宫廷风</option>
+                                <option value="民间风">民间风</option>
                                 <option value="民族风">民族风</option>
-                                <option value="文人风">文人风</option>
-                                <option value="现代主义">现代主义</option>
+                                <option value="宗教风">宗教风</option>
+                                <option value="自然主义">自然主义</option>
+                                <option value="浪漫主义">浪漫主义</option>
                                 <option value="装饰主义">装饰主义</option>
-                                <option value="极简">极简</option>
+                                <option value="现代主义">现代主义</option>
+                                <option value="后现代主义">后现代主义</option>
+                                <option value="极简风">极简风</option>
                                 <option value="新中式">新中式</option>
-                                <option value="复古">复古</option>
+                                <option value="复古风">复古风</option>
                                 <option value="未来主义">未来主义</option>
+                                <option value="科技风">科技风</option>
+                                <option value="童趣风">童趣风</option>
+                                <option value="节庆风">节庆风</option>
+                                <option value="神秘风">神秘风</option>
+                                <option value="东方意象">东方意象</option>
+                                <option value="西方古典">西方古典</option>
+                                <option value="抽象风">抽象风</option>
+                                <option value="写实风">写实风</option>
+                                <option value="装饰风">装饰风</option>
+                                <option value="构成主义">构成主义</option>
+                                <option value="立体主义">立体主义</option>
+                                <option value="装饰艺术">装饰艺术</option>
+                                <option value="波普风">波普风</option>
                             </select>
                         </div>
                         <div class="form-group">
                             <label for="color">色彩 *</label>
                             <select id="color" name="color" required>
-                                <option value="">请选择</option>
-                                <option value="暖色">暖色</option>
-                                <option value="冷色">冷色</option>
-                                <option value="单色">单色</option>
+                                <option value="" disabled selected hidden>请选择</option>
+                                <option value="红">红 🔴</option>
+                                <option value="黄">黄 🟡</option>
+                                <option value="蓝">蓝 🔵</option>
+                                <option value="绿">绿 🟢</option>
+                                <option value="紫">紫 🟣</option>
+                                <option value="橙">橙 🟠</option>
+                                <option value="粉">粉 🌸</option>
+                                <option value="黑">黑 ⚫</option>
+                                <option value="白">白 ⚪</option>
+                                <option value="灰">灰 🩶</option>
+                                <option value="棕">棕 🟤</option>
                             </select>
                         </div>
                         <div class="form-group">
                             <label for="theme">主题元素 *</label>
                             <select id="theme" name="theme" required>
-                                <option value="">请选择</option>
-                                <option value="花卉">花卉</option>
-                                <option value="动物">动物</option>
+                                <option value="" disabled selected hidden>请选择</option>
                                 <option value="人物">人物</option>
+                                <option value="场景">场景</option>
                                 <option value="器物">器物</option>
-                                <option value="几何图形">几何图形</option>
+                                <option value="纹样">纹样</option>
+                                <option value="动物">动物</option>
+                                <option value="植物">植物</option>
+                                <option value="建筑与空间">建筑与空间</option>
+                                <option value="服饰与配饰">服饰与配饰</option>
+                                <option value="静物">静物</option>
                                 <option value="文字符号">文字符号</option>
-                                <option value="云水山石">云水山石</option>
-                                <option value="传统纹样">传统纹样</option>
+                                <option value="抽象图形">抽象图形</option>
+                                <option value="几何图形">几何图形</option>
+                                <option value="神灵佛像">神灵佛像</option>
+                                <option value="场景与叙事">场景与叙事</option>
+                                <option value="纹理与材质">纹理与材质</option>
+                                <option value="其他">其他</option>
+                            </select>
+                        </div>
+
+                        <!-- New Fields -->
+                        <div class="form-group">
+                            <label for="resolution">图片尺寸/分辨率</label>
+                            <input type="text" id="resolution" name="resolution">
+                        </div>
+                        <div class="form-group">
+                            <label for="imageFormat">图片格式</label>
+                            <select id="imageFormat" name="imageFormat">
+                                <option value="" disabled selected hidden>请选择</option>
+                                <option value="RAW">RAW</option>
+                                <option value="TIFF">TIFF</option>
+                                <option value="HEIC">HEIC</option>
+                                <option value="JPG">高分辨率 JPG</option>
+                                <option value="PNG">高分辨率 PNG</option>
                             </select>
                         </div>
                         <div class="form-group">
-                            <label for="sort">排序权重</label>
-                            <input type="number" id="sort" name="sort" value="0">
+                            <label for="copyright">版权状态</label>
+                            <input type="text" id="copyright" name="copyright">
                         </div>
+                        <div class="form-group">
+                            <label for="author">作者</label>
+                            <input type="text" id="author" name="author">
+                        </div>
+                        <div class="form-group">
+                            <label for="originDate">创作时间</label>
+                            <input type="text" id="originDate" name="originDate" placeholder="YYYY-MM-DD">
+                        </div>
+                        <div class="form-group">
+                            <label for="recorder">录入者</label>
+                            <input type="text" id="recorder" name="recorder">
+                        </div>
+
+
                     </div>
 
                     <div class="form-group">

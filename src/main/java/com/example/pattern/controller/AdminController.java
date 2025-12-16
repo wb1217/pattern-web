@@ -47,13 +47,13 @@ public class AdminController {
         if (user == null) {
             return "redirect:/login";
         }
-        
+
         // 检查是否为管理员
         if (!user.isAdmin()) {
             model.addAttribute("error", "您没有管理员权限，无法访问此页面");
             return "redirect:/gallery";
         }
-        
+
         List<Pattern> patterns = patternService.findAll();
         model.addAttribute("patterns", patterns);
         model.addAttribute("user", user);
@@ -67,17 +67,23 @@ public class AdminController {
     @ResponseBody
     public ResponseEntity<?> addPattern(
             @RequestParam("name") String name,
-            @RequestParam(value = "category", required = false) String category,
             @RequestParam(value = "description", required = false) String description,
             @RequestParam("form") String form,
             @RequestParam("style") String style,
             @RequestParam("color") String color,
             @RequestParam("theme") String theme,
-            @RequestParam(value = "sort", required = false, defaultValue = "0") Integer sort,
+            @RequestParam(value = "imageCode", required = false) String imageCode,
+            @RequestParam(value = "resolution", required = false) String resolution,
+            @RequestParam(value = "imageFormat", required = false) String imageFormat,
+            @RequestParam(value = "copyright", required = false) String copyright,
+            @RequestParam(value = "author", required = false) String author,
+            @RequestParam(value = "originDate", required = false) String originDate,
+            @RequestParam(value = "recorder", required = false) String recorder,
+            // Sort param removed
             @RequestParam(value = "imageFile", required = false) MultipartFile imageFile,
             @RequestParam(value = "imageUrl", required = false) String imageUrl,
             HttpSession session) {
-        
+
         try {
             User user = (User) session.getAttribute("user");
             ResponseEntity<?> permissionCheck = checkAdminPermission(user);
@@ -87,13 +93,23 @@ public class AdminController {
 
             Pattern pattern = new Pattern();
             pattern.setName(name);
-            pattern.setCategory(category);
+            // Category removed
             pattern.setDescription(description);
             pattern.setForm(form);
             pattern.setStyle(style);
             pattern.setColor(color);
             pattern.setTheme(theme);
-            pattern.setSort(sort);
+
+            // New Fields
+            pattern.setImageCode(imageCode);
+            pattern.setResolution(resolution);
+            pattern.setImageFormat(imageFormat);
+            pattern.setCopyright(copyright);
+            pattern.setAuthor(author);
+            pattern.setOriginDate(originDate);
+            pattern.setRecorder(recorder);
+
+            // Sort removed
 
             // 处理图片：优先使用上传的文件，否则使用URL
             if (imageFile != null && !imageFile.isEmpty()) {
@@ -120,17 +136,23 @@ public class AdminController {
     public ResponseEntity<?> updatePattern(
             @PathVariable Long id,
             @RequestParam("name") String name,
-            @RequestParam(value = "category", required = false) String category,
             @RequestParam(value = "description", required = false) String description,
             @RequestParam("form") String form,
             @RequestParam("style") String style,
             @RequestParam("color") String color,
             @RequestParam("theme") String theme,
-            @RequestParam(value = "sort", required = false, defaultValue = "0") Integer sort,
+            @RequestParam(value = "imageCode", required = false) String imageCode,
+            @RequestParam(value = "resolution", required = false) String resolution,
+            @RequestParam(value = "imageFormat", required = false) String imageFormat,
+            @RequestParam(value = "copyright", required = false) String copyright,
+            @RequestParam(value = "author", required = false) String author,
+            @RequestParam(value = "originDate", required = false) String originDate,
+            @RequestParam(value = "recorder", required = false) String recorder,
+            // Sort param removed
             @RequestParam(value = "imageFile", required = false) MultipartFile imageFile,
             @RequestParam(value = "imageUrl", required = false) String imageUrl,
             HttpSession session) {
-        
+
         try {
             User user = (User) session.getAttribute("user");
             ResponseEntity<?> permissionCheck = checkAdminPermission(user);
@@ -142,17 +164,27 @@ public class AdminController {
                     .orElseThrow(() -> new RuntimeException("纹理不存在"));
 
             pattern.setName(name);
-            pattern.setCategory(category);
+            // Category removed
             pattern.setDescription(description);
             pattern.setForm(form);
             pattern.setStyle(style);
             pattern.setColor(color);
             pattern.setTheme(theme);
-            pattern.setSort(sort);
+
+            // New Fields
+            pattern.setImageCode(imageCode);
+            pattern.setResolution(resolution);
+            pattern.setImageFormat(imageFormat);
+            pattern.setCopyright(copyright);
+            pattern.setAuthor(author);
+            pattern.setOriginDate(originDate);
+            pattern.setRecorder(recorder);
+
+            // Sort removed
 
             // 处理图片更新
             if (imageFile != null && !imageFile.isEmpty()) {
-                // 删除旧图片（如果是本地上传的）
+                // 删除旧图片
                 if (pattern.getImageUrl() != null && pattern.getImageUrl().startsWith("/uploads/")) {
                     fileStorageService.deleteFile(pattern.getImageUrl());
                 }

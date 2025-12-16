@@ -6,6 +6,5 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import java.util.List;
 
 public interface PatternRepository extends JpaRepository<Pattern, Long>, JpaSpecificationExecutor<Pattern> {
-    // 自定义查询：按分类查询纹样
-    List<Pattern> findByCategory(String category);
+    // Category based search removed
 }
