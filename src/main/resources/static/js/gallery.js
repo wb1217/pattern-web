@@ -259,6 +259,8 @@ document.addEventListener('DOMContentLoaded', function () {
     const resetZoomBtn = document.getElementById('resetZoomBtn');
     const imageContainer = document.querySelector('.modal-image-container');
     const toolbar = document.querySelector('.image-toolbar');
+    const downloadBtn = document.getElementById('downloadBtn');
+    const downloadOverlayBtn = document.getElementById('modalDownloadOverlayBtn');
 
     // Prevent panning when interacting with toolbar
     if (toolbar) {
@@ -311,6 +313,48 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
+    function downloadImage() {
+        if (!modalImage.src) return;
+        const url = modalImage.src;
+        const filename = (modalImage.alt || 'pattern-image') + '.jpg';
+
+        fetch(url)
+            .then(response => response.blob())
+            .then(blob => {
+                const blobUrl = window.URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.href = blobUrl;
+                link.download = filename;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                window.URL.revokeObjectURL(blobUrl);
+            })
+            .catch(err => {
+                console.error('Download failed:', err);
+                // Fallback to simple link if fetch fails (e.g. CORS issues)
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = filename;
+                link.target = '_blank';
+                link.click();
+            });
+    }
+
+    if (downloadBtn) {
+        downloadBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            downloadImage();
+        });
+    }
+
+    if (downloadOverlayBtn) {
+        downloadOverlayBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            downloadImage();
+        });
+    }
+
     // Mouse Wheel Zoom
     if (imageContainer) {
         imageContainer.addEventListener('wheel', (e) => {
@@ -360,6 +404,50 @@ document.addEventListener('DOMContentLoaded', function () {
         document.getElementById('modalAuthor').textContent = pattern.author || '-';
         document.getElementById('modalOriginDate').textContent = pattern.originDate || '-';
         document.getElementById('modalRecorder').textContent = pattern.recorder || '-';
+
+        // Show Series Info and fetch related
+        const seriesContainer = document.getElementById('modalSeriesContainer');
+        const seriesNameDisplay = document.getElementById('modalSeriesName');
+        const seriesGrid = document.getElementById('modalSeriesGrid');
+
+        if (pattern.series) {
+            if (seriesContainer) seriesContainer.style.display = 'block';
+            if (seriesNameDisplay) seriesNameDisplay.textContent = pattern.series;
+
+            // Fetch related images
+            if (seriesGrid) {
+                seriesGrid.innerHTML = '<p>加载中...</p>';
+                fetch(`/api/patterns?series=${encodeURIComponent(pattern.series)}`)
+                    .then(r => r.json())
+                    .then(related => {
+                        // Filter out current image
+                        const others = related.filter(p => p.id !== pattern.id);
+                        if (others.length === 0) {
+                            seriesGrid.innerHTML = '<p>暂无其他同系列图片</p>';
+                        } else {
+                            seriesGrid.innerHTML = '';
+                            others.forEach(p => {
+                                const img = document.createElement('img');
+                                img.src = p.imageUrl;
+                                img.alt = p.name;
+                                img.className = 'series-thumbnail';
+                                img.title = p.name;
+                                img.onclick = (e) => {
+                                    e.stopPropagation(); // prevent modal close on grid click? actually grid is inside modal
+                                    openModal(p); // Recursive call to switch image
+                                };
+                                seriesGrid.appendChild(img);
+                            });
+                        }
+                    })
+                    .catch(e => {
+                        console.error(e);
+                        seriesGrid.innerHTML = '<p>加载失败</p>';
+                    });
+            }
+        } else {
+            if (seriesContainer) seriesContainer.style.display = 'none';
+        }
 
         // Category display removed
         document.getElementById('modalDescription').textContent = pattern.description || '暂无描述';
@@ -427,6 +515,10 @@ document.addEventListener('DOMContentLoaded', function () {
                         // the background grid will still show it until refresh or next fetch.
                         // This is usually desired behavior (don't have things vanish while I'm looking at details).
                         // If users want instant removal from grid, we can trigger fetchPatterns() on closeModal.
+                        const onlyFavorites = document.getElementById('onlyFavorites') ? document.getElementById('onlyFavorites').checked : false;
+                        if (onlyFavorites && !data.favorited) {
+                            // Optional: mark for removal on close
+                        }
                     } else {
                         if (data.message === '未登录') {
                             alert('请先登录后收藏');

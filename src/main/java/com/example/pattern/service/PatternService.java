@@ -24,12 +24,16 @@ public class PatternService {
 
     // Updated search signature
     public List<Pattern> searchPatterns(String keyword, String form, String style, String color, String theme,
+            String series,
             Long userId, boolean onlyFavorites) {
         Specification<Pattern> spec = (root, query, cb) -> {
             List<Predicate> predicates = new ArrayList<>();
 
             if (StringUtils.hasText(keyword)) {
-                predicates.add(cb.like(root.get("name"), "%" + keyword + "%"));
+                String pattern = "%" + keyword + "%";
+                predicates.add(cb.or(
+                        cb.like(root.get("name"), pattern),
+                        cb.like(root.get("description"), pattern)));
             }
             if (StringUtils.hasText(form)) {
                 predicates.add(cb.equal(root.get("form"), form));
@@ -42,6 +46,9 @@ public class PatternService {
             }
             if (StringUtils.hasText(theme)) {
                 predicates.add(cb.equal(root.get("theme"), theme));
+            }
+            if (StringUtils.hasText(series)) {
+                predicates.add(cb.equal(root.get("series"), series));
             }
 
             // Filters based on favorites

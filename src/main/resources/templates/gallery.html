@@ -10,6 +10,8 @@
 </head>
 
 <body>
+
+
     <div class="gallery-layout">
         <!-- Sidebar Filters -->
         <aside class="sidebar">
@@ -265,7 +267,7 @@
                             <circle cx="11" cy="11" r="8"></circle>
                             <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
                         </svg>
-                        <input type="text" id="searchInput" class="search-input" placeholder="搜索纹样名称...">
+                        <input type="text" id="searchInput" class="search-input" placeholder="搜索纹样名称或描述...">
                     </div>
                 </div>
             </div>
@@ -314,6 +316,33 @@
                             </path>
                         </svg>
                     </button>
+
+                    <!-- Download Button (Overlay) -->
+                    <button id="modalDownloadOverlayBtn" class="favorite-btn" style="
+                        position: absolute;
+                        bottom: 2rem;
+                        right: 6rem;
+                        background: rgba(255, 255, 255, 0.9);
+                        border: none;
+                        border-radius: 50%;
+                        width: 48px;
+                        height: 48px;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        cursor: pointer;
+                        transition: all 0.2s;
+                        color: #7c3aed;
+                        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+                        z-index: 10;
+                    " title="下载原图">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                            <polyline points="7 10 12 15 17 10"></polyline>
+                            <line x1="12" y1="15" x2="12" y2="3"></line>
+                        </svg>
+                    </button>
                     <!-- Zoom Controls -->
                     <div class="image-toolbar">
                         <button id="zoomOutBtn" class="toolbar-btn" title="缩小">
@@ -335,6 +364,15 @@
                             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                                 stroke-width="2">
                                 <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7" />
+                            </svg>
+                        </button>
+                        <div class="toolbar-divider"></div>
+                        <button id="downloadBtn" class="toolbar-btn" title="下载原图">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                <polyline points="7 10 12 15 17 10"></polyline>
+                                <line x1="12" y1="15" x2="12" y2="3"></line>
                             </svg>
                         </button>
                     </div>
@@ -403,8 +441,45 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- Series Section -->
+                <!-- Series Section (Redesigned) -->
+                <div id="modalSeriesContainer"
+                    style="display: none; grid-column: 1 / -1; margin-top: 30px; padding-top: 20px; border-top: 1px solid rgba(0,0,0,0.05); width: 100%;">
+                    <div style="margin-bottom: 15px; text-align: center;">
+                        <span
+                            style="color: #94a3b8; font-size: 12px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; display: block; margin-bottom: 4px;">More
+                            from Series</span>
+                        <span id="modalSeriesName" style="color: #333; font-size: 16px; font-weight: 700;"></span>
+                    </div>
+                    <div id="modalSeriesGrid"
+                        style="display: flex; flex-wrap: wrap; justify-content: center; gap: 16px;">
+                        <!-- Series images loaded here -->
+                    </div>
+                    <style>
+                        .series-thumbnail {
+                            width: 100px;
+                            height: 100px;
+                            object-fit: cover;
+                            border-radius: 12px;
+                            cursor: pointer;
+                            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+                            border: 2px solid transparent;
+                            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+                            background: #f1f5f9;
+                        }
+
+                        .series-thumbnail:hover {
+                            transform: translateY(-5px) scale(1.05);
+                            border-color: #8b5cf6;
+                            box-shadow: 0 10px 25px -5px rgba(139, 92, 246, 0.3);
+                            z-index: 10;
+                        }
+                    </style>
+                </div>
             </div>
         </div>
+    </div>
     </div>
 
     <script th:src="@{/js/gallery.js}"></script>
