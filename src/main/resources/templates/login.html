@@ -8,11 +8,19 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
 
-<body>
+<body class="login-page">
+    <!-- Video Background -->
+    <video autoplay muted loop playsinline id="login-bg-video">
+        <source th:src="@{/images/background.mp4}" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+    <!-- Performance-friendly overlay -->
+    <div class="video-overlay"></div>
+
     <div class="login-container">
         <!-- Left Side: Image Section (Independent) -->
         <div class="login-image-section">
-            <img th:src="@{/images/yunlong.jpg}" alt="Dragon Texture" class="login-decoration-image">
+            <img th:src="@{/images/7.gif}" alt="Pattern Texture" class="login-decoration-image">
         </div>
 
         <!-- Right Side: Login Form Section (Independent) -->

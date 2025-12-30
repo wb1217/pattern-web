@@ -79,6 +79,7 @@ public class AdminController {
             @RequestParam(value = "author", required = false) String author,
             @RequestParam(value = "originDate", required = false) String originDate,
             @RequestParam(value = "recorder", required = false) String recorder,
+            @RequestParam(value = "series", required = false) String series,
             // Sort param removed
             @RequestParam(value = "imageFile", required = false) MultipartFile imageFile,
             @RequestParam(value = "imageUrl", required = false) String imageUrl,
@@ -108,6 +109,7 @@ public class AdminController {
             pattern.setAuthor(author);
             pattern.setOriginDate(originDate);
             pattern.setRecorder(recorder);
+            pattern.setSeries(series);
 
             // Sort removed
 
@@ -148,6 +150,7 @@ public class AdminController {
             @RequestParam(value = "author", required = false) String author,
             @RequestParam(value = "originDate", required = false) String originDate,
             @RequestParam(value = "recorder", required = false) String recorder,
+            @RequestParam(value = "series", required = false) String series,
             // Sort param removed
             @RequestParam(value = "imageFile", required = false) MultipartFile imageFile,
             @RequestParam(value = "imageUrl", required = false) String imageUrl,
@@ -179,6 +182,7 @@ public class AdminController {
             pattern.setAuthor(author);
             pattern.setOriginDate(originDate);
             pattern.setRecorder(recorder);
+            pattern.setSeries(series);
 
             // Sort removed
 

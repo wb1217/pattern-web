@@ -32,6 +32,8 @@ public class Pattern {
     private String originDate; // 创作时间
     private String recorder; // 录入者
 
+    private String series; // 系列名称
+
     // Sort removed
     private LocalDateTime createTime; // 补充：创建时间
     private LocalDateTime updateTime; // 补充：更新时间

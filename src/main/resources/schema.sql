@@ -32,6 +32,7 @@ CREATE TABLE `pattern_info` (
     `author` varchar(50) DEFAULT NULL COMMENT 'Author',
     `origin_date` varchar(50) DEFAULT NULL COMMENT 'Creation Date',
     `recorder` varchar(50) DEFAULT NULL COMMENT 'Recorder',
+    `series` varchar(100) DEFAULT NULL COMMENT 'Series Name',
     `create_time` datetime DEFAULT NULL COMMENT 'Create Time',
     `update_time` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'Update Time',
     PRIMARY KEY (`id`)

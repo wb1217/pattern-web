@@ -36,6 +36,7 @@ public class PatternController {
             @RequestParam(required = false) String style,
             @RequestParam(required = false) String color,
             @RequestParam(required = false) String theme,
+            @RequestParam(required = false) String series,
             @RequestParam(required = false, defaultValue = "false") boolean onlyFavorites,
             jakarta.servlet.http.HttpSession session) {
 
@@ -47,7 +48,7 @@ public class PatternController {
             return List.of(); // Not logged in, can't show favorites
         }
 
-        return patternService.searchPatterns(keyword, form, style, color, theme, userId, onlyFavorites);
+        return patternService.searchPatterns(keyword, form, style, color, theme, series, userId, onlyFavorites);
     }
 
     @org.springframework.web.bind.annotation.PostMapping("/api/favorite/toggle")
