@@ -72,4 +72,28 @@ public class PatternController {
         }
         return patternService.getFavoritedPatternIds(user.getId());
     }
+
+    @org.springframework.web.bind.annotation.DeleteMapping("/api/favorites/clear-all")
+    @ResponseBody
+    public java.util.Map<String, Object> clearAllFavorites(jakarta.servlet.http.HttpSession session) {
+        com.example.pattern.entity.User user = (com.example.pattern.entity.User) session.getAttribute("user");
+        if (user == null) {
+            return java.util.Map.of("success", false, "message", "未登录");
+        }
+        int count = patternService.clearAllFavorites(user.getId());
+        return java.util.Map.of("success", true, "count", count);
+    }
+
+    @org.springframework.web.bind.annotation.DeleteMapping("/api/favorites/batch")
+    @ResponseBody
+    public java.util.Map<String, Object> batchUnfavorite(
+            @org.springframework.web.bind.annotation.RequestBody List<Long> patternIds,
+            jakarta.servlet.http.HttpSession session) {
+        com.example.pattern.entity.User user = (com.example.pattern.entity.User) session.getAttribute("user");
+        if (user == null) {
+            return java.util.Map.of("success", false, "message", "未登录");
+        }
+        patternService.batchUnfavorite(user.getId(), patternIds);
+        return java.util.Map.of("success", true, "count", patternIds.size());
+    }
 }

@@ -126,4 +126,19 @@ public class PatternService {
     public void deleteById(Long id) {
         patternRepository.deleteById(id);
     }
+
+    @org.springframework.transaction.annotation.Transactional
+    public int clearAllFavorites(Long userId) {
+        int count = favoriteRepository.findByUserId(userId).size();
+        favoriteRepository.deleteByUserId(userId);
+        return count;
+    }
+
+    @org.springframework.transaction.annotation.Transactional
+    public void batchUnfavorite(Long userId, List<Long> patternIds) {
+        if (patternIds == null || patternIds.isEmpty()) {
+            return;
+        }
+        favoriteRepository.deleteByUserIdAndPatternIdIn(userId, patternIds);
+    }
 }

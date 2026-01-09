@@ -50,9 +50,170 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Favorites Filter
     const onlyFavoritesCheckbox = document.getElementById('onlyFavorites');
+    const batchOperationPanel = document.getElementById('batchOperationPanel');
+
     if (onlyFavoritesCheckbox) {
         onlyFavoritesCheckbox.addEventListener('change', () => {
+            // Show/hide batch operation panel
+            if (batchOperationPanel) {
+                batchOperationPanel.style.display = onlyFavoritesCheckbox.checked ? 'block' : 'none';
+            }
+            // Reset multi-select mode when unchecking favorites filter
+            if (!onlyFavoritesCheckbox.checked && multiSelectMode) {
+                toggleMultiSelectMode(false);
+            }
             fetchPatterns();
+        });
+    }
+
+    // Batch Operations
+    let multiSelectMode = false;
+    let selectedPatternIds = new Set();
+    const floatingActionBar = document.getElementById('floatingActionBar');
+    const selectionCountEl = document.getElementById('selectionCount');
+    const multiSelectCheckbox = document.getElementById('multiSelectMode');
+    const clearAllBtn = document.getElementById('clearAllFavoritesBtn');
+    const batchUnfavoriteBtn = document.getElementById('batchUnfavoriteBtn');
+    const cancelSelectionBtn = document.getElementById('cancelSelectionBtn');
+
+    // Toggle Multi-Select Mode
+    if (multiSelectCheckbox) {
+        multiSelectCheckbox.addEventListener('change', (e) => {
+            toggleMultiSelectMode(e.target.checked);
+        });
+    }
+
+    function toggleMultiSelectMode(enabled) {
+        multiSelectMode = enabled;
+        if (multiSelectCheckbox) multiSelectCheckbox.checked = enabled;
+
+        const cards = document.querySelectorAll('.pattern-card');
+        cards.forEach(card => {
+            if (enabled) {
+                card.classList.add('multi-select-mode');
+                // Add selection checkbox if not exists
+                if (!card.querySelector('.selection-checkbox-container')) {
+                    const checkboxContainer = document.createElement('div');
+                    checkboxContainer.className = 'selection-checkbox-container';
+                    checkboxContainer.innerHTML = '<input type="checkbox" class="selection-checkbox">';
+                    card.insertBefore(checkboxContainer, card.firstChild);
+
+                    // Add click handler to stop propagation
+                    const checkbox = checkboxContainer.querySelector('.selection-checkbox');
+                    checkbox.addEventListener('click', (e) => e.stopPropagation());
+
+                    checkbox.addEventListener('change', (e) => {
+                        // Change doesn't bubble usually, but good practice
+                        e.stopPropagation();
+
+                        const patternId = card.dataset.patternId;
+                        if (checkbox.checked) {
+                            selectedPatternIds.add(patternId);
+                            card.classList.add('selected');
+                        } else {
+                            selectedPatternIds.delete(patternId);
+                            card.classList.remove('selected');
+                        }
+                        updateSelectionCount();
+                    });
+                }
+            } else {
+                card.classList.remove('multi-select-mode', 'selected');
+                const checkboxContainer = card.querySelector('.selection-checkbox-container');
+                if (checkboxContainer) {
+                    checkboxContainer.remove();
+                }
+            }
+        });
+
+        if (!enabled) {
+            selectedPatternIds.clear();
+            updateSelectionCount();
+        }
+    }
+
+    function updateSelectionCount() {
+        const count = selectedPatternIds.size;
+        if (selectionCountEl) {
+            selectionCountEl.textContent = `已选择 ${count} 项`;
+        }
+        if (floatingActionBar) {
+            floatingActionBar.style.display = count > 0 ? 'block' : 'none';
+        }
+    }
+
+    // Clear All Favorites
+    if (clearAllBtn) {
+        clearAllBtn.addEventListener('click', () => {
+            if (!confirm('确定要取消所有收藏吗？此操作不可撤销。')) {
+                return;
+            }
+
+            fetch('/api/favorites/clear-all', {
+                method: 'DELETE'
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert(`已成功取消 ${data.count} 个收藏`);
+                        // Uncheck favorites filter and refresh
+                        if (onlyFavoritesCheckbox) {
+                            onlyFavoritesCheckbox.checked = false;
+                        }
+                        if (batchOperationPanel) {
+                            batchOperationPanel.style.display = 'none';
+                        }
+                        toggleMultiSelectMode(false);
+                        fetchFavorites().then(() => fetchPatterns());
+                    } else {
+                        alert('操作失败：' + (data.message || '未知错误'));
+                    }
+                })
+                .catch(err => {
+                    console.error('Clear all favorites error:', err);
+                    alert('操作失败，请重试');
+                });
+        });
+    }
+
+    // Batch Unfavorite
+    if (batchUnfavoriteBtn) {
+        batchUnfavoriteBtn.addEventListener('click', () => {
+            const count = selectedPatternIds.size;
+            if (count === 0) return;
+
+            if (!confirm(`确定要取消 ${count} 个收藏吗？`)) {
+                return;
+            }
+
+            fetch('/api/favorites/batch', {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(Array.from(selectedPatternIds))
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert(`已成功取消 ${count} 个收藏`);
+                        toggleMultiSelectMode(false);
+                        fetchFavorites().then(() => fetchPatterns());
+                    } else {
+                        alert('操作失败：' + (data.message || '未知错误'));
+                    }
+                })
+                .catch(err => {
+                    console.error('Batch unfavorite error:', err);
+                    alert('操作失败，请重试');
+                });
+        });
+    }
+
+    // Cancel Selection
+    if (cancelSelectionBtn) {
+        cancelSelectionBtn.addEventListener('click', () => {
+            toggleMultiSelectMode(false);
         });
     }
 
@@ -189,8 +350,24 @@ document.addEventListener('DOMContentLoaded', function () {
                 </div>
             `;
 
-            // Add click event to open modal
-            card.addEventListener('click', () => openModal(pattern));
+            // Add click event to open modal or toggle selection
+            card.addEventListener('click', (e) => {
+                // If clicking favorite button or its children, do nothing (handled by toggleFavorite)
+                if (e.target.closest('.favorite-btn')) return;
+
+                if (typeof multiSelectMode !== 'undefined' && multiSelectMode) {
+                    // Multi-select mode: toggle selection
+                    const checkbox = card.querySelector('.selection-checkbox');
+                    if (checkbox) {
+                        checkbox.checked = !checkbox.checked;
+                        // Dispatch change event to trigger the listener
+                        checkbox.dispatchEvent(new Event('change'));
+                    }
+                    return;
+                }
+
+                openModal(pattern);
+            });
 
             grid.appendChild(card);
         });

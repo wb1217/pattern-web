@@ -22,7 +22,7 @@ public class WebConfig implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(loginInterceptor)
                 .addPathPatterns("/**")
-                .excludePathPatterns("/login", "/css/**", "/js/**", "/images/**", "/uploads/**", "/error");
+                .excludePathPatterns("/login", "/css/**", "/js/**", "/images/**", "/fonts/**", "/uploads/**", "/error");
     }
 
     @Override
@@ -30,11 +30,18 @@ public class WebConfig implements WebMvcConfigurer {
         // 配置上传文件的访问路径
         String uploadPath = Paths.get(uploadDir).toAbsolutePath().toString();
         registry.addResourceHandler("/uploads/patterns/**")
-                .addResourceLocations("file:" + uploadPath + "/");
+                .addResourceLocations("file:" + uploadPath + "/")
+                .setCachePeriod(31536000); // 1 year cache
 
         // 头像访问路径
         String avatarUploadPath = Paths.get("uploads/avatars").toAbsolutePath().toString();
         registry.addResourceHandler("/uploads/avatars/**")
-                .addResourceLocations("file:" + avatarUploadPath + "/");
+                .addResourceLocations("file:" + avatarUploadPath + "/")
+                .setCachePeriod(31536000);
+
+        // 字体文件配置 - 添加长期缓存
+        registry.addResourceHandler("/fonts/**")
+                .addResourceLocations("classpath:/static/fonts/")
+                .setCachePeriod(31536000); // 1 year cache for fonts
     }
 }

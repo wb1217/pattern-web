@@ -4,9 +4,43 @@
 <head>
     <meta charset="UTF-8">
     <title>图库 - 耘裳织象（Yunshang Digital Visual Archive）</title>
-    <link rel="stylesheet" th:href="@{/css/style.css?v=light}">
+    <!-- Preload Critical Fonts -->
+    <link rel="preload" href="/fonts/HYYongZiShanHeLi95J_v4.woff2?v=2026" as="font" type="font/woff2" crossorigin>
+    <!-- Optional: Uncomment if you need additional font weights -->
+    <!-- <link rel="preload" href="/fonts/HYYongZiShanHeLi95F_v4.woff2?v=2026" as="font" type="font/woff2" crossorigin> -->
+    <!-- <link rel="preload" href="/fonts/HYYongZiShanHeLi85J_v4.woff2?v=2026" as="font" type="font/woff2" crossorigin> -->
+    <!-- <link rel="preload" href="/fonts/HYYongZiShanHeLi85W_v4.woff2?v=2026" as="font" type="font/woff2" crossorigin> -->
+
+    <link rel="stylesheet" th:href="@{/css/style.css(v=2026)}">
     <link rel="stylesheet" th:href="@{/css/viewer.css}">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+
+    <script>
+        // Simple and fast font loading with browser cache support
+        let fontLoaded = false;
+
+        // 3 second timeout to match font-display: block behavior
+        const fontReadyTimeout = setTimeout(() => {
+            if (!fontLoaded) {
+                console.log('Showing page after timeout');
+                document.body.classList.add('fonts-ready');
+            }
+        }, 3000);
+
+        if ("fonts" in document) {
+            // Wait for fonts to be ready (usually instant if cached)
+            document.fonts.ready.then(() => {
+                fontLoaded = true;
+                clearTimeout(fontReadyTimeout);
+                document.body.classList.add('fonts-ready');
+                console.log('✓ Fonts ready');
+            });
+        } else {
+            // Fallback for old browsers
+            clearTimeout(fontReadyTimeout);
+            document.body.classList.add('fonts-ready');
+        }
+    </script>
 </head>
 
 <body>
@@ -17,7 +51,7 @@
         <aside class="sidebar">
             <!-- Sidebar Header -->
             <div class="sidebar-header">
-                <h2 class="gallery-title" style="font-size: 1.5rem;">筛选</h2>
+                <h2 class="sidebar-title">筛选</h2>
             </div>
 
             <!-- Sidebar Filters (Scrollable) -->
@@ -29,6 +63,24 @@
                         <label class="filter-option" style="font-weight: bold; color: #db2777;">
                             <input type="checkbox" id="onlyFavorites" class="filter-checkbox">
                             ❤️ 只看收藏
+                        </label>
+                    </div>
+
+                    <!-- Batch Operation Panel (shows only when favorites filter is active) -->
+                    <div id="batchOperationPanel" class="batch-operation-panel" style="display: none;">
+                        <button id="clearAllFavoritesBtn" class="batch-btn batch-btn-danger">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <polyline points="3 6 5 6 21 6"></polyline>
+                                <path
+                                    d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2">
+                                </path>
+                            </svg>
+                            一键清空所有收藏
+                        </button>
+                        <label class="batch-checkbox-label">
+                            <input type="checkbox" id="multiSelectMode" class="batch-checkbox">
+                            <span>☑️ 多选模式</span>
                         </label>
                     </div>
                 </div>
@@ -187,27 +239,27 @@
                         <label class="filter-option"><input type="radio" name="color" value="" checked
                                 class="filter-checkbox"> 全部</label>
                         <label class="filter-option"><input type="radio" name="color" value="红" class="filter-checkbox">
-                            红 🔴</label>
+                            红 <span class="color-circle red"></span></label>
                         <label class="filter-option"><input type="radio" name="color" value="黄" class="filter-checkbox">
-                            黄 🟡</label>
+                            黄 <span class="color-circle yellow"></span></label>
                         <label class="filter-option"><input type="radio" name="color" value="蓝" class="filter-checkbox">
-                            蓝 🔵</label>
+                            蓝 <span class="color-circle blue"></span></label>
                         <label class="filter-option"><input type="radio" name="color" value="绿" class="filter-checkbox">
-                            绿 🟢</label>
+                            绿 <span class="color-circle green"></span></label>
                         <label class="filter-option"><input type="radio" name="color" value="紫" class="filter-checkbox">
-                            紫 🟣</label>
+                            紫 <span class="color-circle purple"></span></label>
                         <label class="filter-option"><input type="radio" name="color" value="橙" class="filter-checkbox">
-                            橙 🟠</label>
+                            橙 <span class="color-circle orange"></span></label>
                         <label class="filter-option"><input type="radio" name="color" value="粉" class="filter-checkbox">
-                            粉 🌸</label>
+                            粉 <span class="color-circle pink"></span></label>
                         <label class="filter-option"><input type="radio" name="color" value="黑" class="filter-checkbox">
-                            黑 ⚫</label>
+                            黑 <span class="color-circle black"></span></label>
                         <label class="filter-option"><input type="radio" name="color" value="白" class="filter-checkbox">
-                            白 ⚪</label>
+                            白 <span class="color-circle white"></span></label>
                         <label class="filter-option"><input type="radio" name="color" value="灰" class="filter-checkbox">
-                            灰 🩶</label>
+                            灰 <span class="color-circle gray"></span></label>
                         <label class="filter-option"><input type="radio" name="color" value="棕" class="filter-checkbox">
-                            棕 🟤</label>
+                            棕 <span class="color-circle brown"></span></label>
                     </div>
                 </div>
             </div>
@@ -383,14 +435,18 @@
                     </div>
 
                     <!-- Compact Info Grid (All metadata + Category + Code) -->
+                    <!-- Compact Info Grid (All metadata + Category + Code) -->
                     <div
-                        style="display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 8px; margin-bottom: 1rem; background: #f8fafc; padding: 12px; border-radius: 8px; font-size: 13px;">
+                        style="display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 8px; margin-bottom: 1rem; background: #ffffff; padding: 12px; border-radius: 8px; font-size: 13px;">
 
+                        <div class="modal-detail" style="margin-bottom: 0;">
+                            <span class="detail-label" style="color: #64748b;">说明：</span>
+                            <span id="modalDescription" class="detail-value">-</span>
+                        </div>
                         <div class="modal-detail" style="margin-bottom: 0;">
                             <span class="detail-label" style="color: #64748b;">编号：</span>
                             <span id="modalImageCode" class="detail-value" style="font-weight: 600;">-</span>
                         </div>
-                        <!-- Category removed -->
                         <div class="modal-detail" style="margin-bottom: 0;">
                             <span class="detail-label" style="color: #64748b;">尺寸/分辨率：</span>
                             <span id="modalResolution" class="detail-value">-</span>
@@ -422,7 +478,7 @@
                         <p id="modalDescription" class="detail-value" style="font-size: 14px; color: #4b5563;"></p>
                     </div>
                     <div class="modal-tags"
-                        style="display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 8px; background: #f8fafc; padding: 12px; border-radius: 8px; border-top: none;">
+                        style="display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 8px; background: #ffffff; padding: 12px; border-radius: 8px; border-top: none;">
                         <div class="modal-detail" style="margin-bottom: 0;">
                             <span class="detail-label" style="color: #64748b;">形式结构：</span>
                             <div><span id="modalForm" class="tag"></span></div>
@@ -480,6 +536,25 @@
             </div>
         </div>
     </div>
+    </div>
+
+    <!-- Floating Action Bar for Batch Operations -->
+    <div id="floatingActionBar" class="floating-action-bar" style="display: none;">
+        <div class="fab-content">
+            <span id="selectionCount" class="fab-count">已选择 0 项</span>
+            <div class="fab-actions">
+                <button id="batchUnfavoriteBtn" class="fab-btn fab-btn-primary">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path
+                            d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z">
+                        </path>
+                        <line x1="1" y1="1" x2="23" y2="23"></line>
+                    </svg>
+                    取消收藏
+                </button>
+                <button id="cancelSelectionBtn" class="fab-btn fab-btn-secondary">取消选择</button>
+            </div>
+        </div>
     </div>
 
     <script th:src="@{/js/gallery.js}"></script>

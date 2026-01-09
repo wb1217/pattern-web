@@ -4,8 +4,47 @@
 <head>
     <meta charset="UTF-8">
     <title>登录 - 耘裳织象（Yunshang Digital Visual Archive）</title>
-    <link rel="stylesheet" th:href="@{/css/style.css?v=light}">
+    <!-- Preload Critical Fonts -->
+    <link rel="preload" href="/fonts/HYYongZiShanHeLi95J_v4.woff2?v=2026" as="font" type="font/woff2" crossorigin>
+    <!-- Optional: Uncomment if you need additional font weight -->
+    <!-- <link rel="preload" href="/fonts/HYYongZiShanHeLi95F_v4.woff2?v=2026" as="font" type="font/woff2" crossorigin> -->
+
+    <link rel="stylesheet" th:href="@{/css/style.css(v=2026)}">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+
+    <script>
+        // Explicit font loading for login page with debug logging
+        let fontLoaded = false;
+
+        // Explicitly request font load before anything else
+        if ("fonts" in document) {
+            const fontName = '汉仪永字山河隶 95J';
+            console.log('Starting font load for:', fontName);
+
+            // Force load the font immediately
+            document.fonts.load('1rem "' + fontName + '"').then(() => {
+                console.log('Font load() completed');
+            }).catch(err => {
+                console.error('Font load() failed:', err);
+            });
+
+            // Wait for all fonts to be ready
+            document.fonts.ready.then(() => {
+                fontLoaded = true;
+                clearTimeout(fontReadyTimeout);
+                document.body.classList.add('fonts-ready');
+                console.log('✓ All fonts ready, page visible');
+            });
+        }
+
+        // Fallback timeout
+        const fontReadyTimeout = setTimeout(() => {
+            if (!fontLoaded) {
+                console.warn('Font timeout - showing page anyway');
+                document.body.classList.add('fonts-ready');
+            }
+        }, 3000);
+    </script>
 </head>
 
 <body class="login-page">

@@ -4,7 +4,34 @@
 <head>
     <meta charset="UTF-8">
     <title>耘裳织象（Yunshang Digital Visual Archive）</title>
-    <link rel="stylesheet" href="/css/style.css"> <!-- 引入static下的CSS -->
+    <!-- Preload Critical Fonts -->
+    <link rel="preload" href="/fonts/HYYongZiShanHeLi95J_v4.woff2?v=2026" as="font" type="font/woff2" crossorigin>
+    <!-- Optional: Uncomment if you need additional font weight -->
+    <!-- <link rel="preload" href="/fonts/HYYongZiShanHeLi95F_v4.woff2?v=2026" as="font" type="font/woff2" crossorigin> -->
+
+    <link rel="stylesheet" href="/css/style.css?v=2026"> <!-- 引入static下的CSS -->
+
+    <script>
+        // Simple and fast font loading with browser cache support
+        let fontLoaded = false;
+
+        const fontReadyTimeout = setTimeout(() => {
+            if (!fontLoaded) {
+                document.body.classList.add('fonts-ready');
+            }
+        }, 3000);
+
+        if ("fonts" in document) {
+            document.fonts.ready.then(() => {
+                fontLoaded = true;
+                clearTimeout(fontReadyTimeout);
+                document.body.classList.add('fonts-ready');
+            });
+        } else {
+            clearTimeout(fontReadyTimeout);
+            document.body.classList.add('fonts-ready');
+        }
+    </script>
 </head>
 
 <body>
